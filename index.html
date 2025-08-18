@@ -17,11 +17,10 @@
 
     .image-block{
       width:100%;
+      position:relative;
       display:flex;
-      flex-direction:column;
       align-items:center;
       justify-content:center;
-      padding:0;
     }
 
     .image-block > img{
@@ -32,9 +31,12 @@
       pointer-events:none;
     }
 
-    /* ===== Contador debajo ===== */
+    /* ===== Contador sobre la imagen ===== */
     #countdownWrap {
-      margin-top:1rem;
+      position:absolute;
+      bottom:18%;   /* <-- ajusta este valor para moverlo más arriba o más abajo */
+      left:50%;
+      transform:translateX(-50%);
       text-align:center;
       color: var(--text);
       font-family:'Playfair Display', serif;
@@ -47,6 +49,7 @@
       display:flex;
       justify-content:center;
       gap:1rem;
+      text-shadow:0 0 8px rgba(0,0,0,0.6);
     }
 
     #countdown span {
@@ -61,6 +64,7 @@
       display:flex;
       justify-content:center;
       gap:1.5rem;
+      text-shadow:0 0 8px rgba(0,0,0,0.6);
     }
 
     /* Fade-in */
