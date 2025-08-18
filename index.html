@@ -6,128 +6,197 @@
   <title>Invitación - Mis XV</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --text: #fff;
-    }
+    :root{ --text: #fff; }
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;background:#000}
-    /* Cada bloque ocupa 100vh (pantalla completa) y la imagen siempre cubre sin deformar */
-    .image-block{
-      width:100%;
-      min-height:100vh;
-      height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background-position:center center;
-      background-repeat:no-repeat;
-      background-size:cover; /* -> llena la zona, mantiene proporción (no deforma) */
-      overflow:hidden;
-    }
 
-    /* Contador puro: sin fondo, solo números */
-    .countdown {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(28px, 6vw, 72px);
-      font-weight:700;
-      color: var(--text);
-      letter-spacing: 0.03em;
-      text-shadow: 0 6px 20px rgba(0,0,0,0.6); /* para legibilidad sobre la imagen */
-      background: transparent;
-      padding: 0;
-      margin: 0;
-      line-height: 1;
-      user-select: none;
-    }
+/* cada bloque ya no fuerza 100vh: su altura se ajustará por JS */
+.image-block{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:visible; /* permitimos que el bloque sea mayor que la ventana si hace falta */
+  background:transparent;
+}
 
-    /* Pequeño estilo para el separador : */
-    .countdown .sep { opacity: 0.95; margin: 0 8px; }
+/* la imagen se mostrará como elemento real para respetar la proporción */
+.image-block > img{
+  display:block;
+  /* no ponemos max-width ni max-height porque ajustaremos con JS */
+  user-select:none;
+  pointer-events:none;
+}
 
-    /* Para asegurar que el contador está siempre visible encima de la imagen (sin fondo) */
-    #countdownWrap {
-      position: relative;
-      z-index: 5;
-      text-align: center;
-      pointer-events: none;
-    }
+/* contador encima */
+#countdownWrap {
+  position: absolute;
+  inset: 0;               /* ocupa el mismo rectángulo del bloque */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index: 5;
+  pointer-events: none;
+}
 
-    /* Opcional: transición suave al cargar */
-    .image-block{opacity:0;transform:translateY(8px);transition:opacity 500ms ease, transform 600ms cubic-bezier(.2,.9,.2,1)}
-    .image-block.visible{opacity:1;transform:none}
+.countdown {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 6vw, 72px);
+  font-weight:700;
+  color: var(--text);
+  letter-spacing: 0.03em;
+  text-shadow: 0 6px 20px rgba(0,0,0,0.6);
+  background: transparent;
+  line-height: 1;
+  user-select: none;
+}
+
+/* animación de entrada */
+.image-block{opacity:0;transform:translateY(8px);transition:opacity 500ms ease, transform 600ms cubic-bezier(.2,.9,.2,1)}
+.image-block.visible{opacity:1;transform:none}
+
+/* opcional: elimina scroll horizontal molesto */
+html, body { overflow-x: hidden; }
   </style>
 </head>
 <body>
 
-  <!-- Bloques: sin contenido textual -->
   <main>
-    <section class="image-block" id="img1" style="background-image:url('imagenes/1.png');"></section>
+    <!-- Cada bloque ahora contiene una imagen real -->
+    <section class="image-block" id="img1">
+      <img src="imagenes/1.png" alt="imagen 1">
+    </section>
 
-    <!-- Bloque del contador: SOLO el contador encima de la imagen -->
-    <section class="image-block" id="img2" style="background-image:url('imagenes/2.png');">
+    <section class="image-block" id="img2">
+      <img src="imagenes/2.png" alt="imagen 2">
       <div id="countdownWrap">
         <div id="countdown" class="countdown" aria-live="polite" role="timer">00:00:00:00</div>
       </div>
     </section>
 
-    <section class="image-block" id="img3" style="background-image:url('imagenes/3.png');"></section>
-    <section class="image-block" id="img4" style="background-image:url('imagenes/4.png');"></section>
-    <section class="image-block" id="img5" style="background-image:url('imagenes/5.png');"></section>
-    <section class="image-block" id="img6" style="background-image:url('imagenes/6.png');"></section>
-    <section class="image-block" id="img7" style="background-image:url('imagenes/7.png');"></section>
-    <section class="image-block" id="img8" style="background-image:url('imagenes/8.png');"></section>
+    <section class="image-block" id="img3">
+      <img src="imagenes/3.png" alt="imagen 3">
+    </section>
+
+    <section class="image-block" id="img4">
+      <img src="imagenes/4.png" alt="imagen 4">
+    </section>
+
+    <section class="image-block" id="img5">
+      <img src="imagenes/5.png" alt="imagen 5">
+    </section>
+
+    <section class="image-block" id="img6">
+      <img src="imagenes/6.png" alt="imagen 6">
+    </section>
+
+    <section class="image-block" id="img7">
+      <img src="imagenes/7.png" alt="imagen 7">
+    </section>
+
+    <section class="image-block" id="img8">
+      <img src="imagenes/8.png" alt="imagen 8">
+    </section>
   </main>
 
-  <script>
-    // ===== Contador puro (DD:HH:MM:SS) =====
-    const fechaEvento = new Date("October 11, 2025 20:00:00"); // mantuve la fecha original
-    const countdownEl = document.getElementById('countdown');
+<script>
+/* ===== Contador (igual que tenías) ===== */
+const fechaEvento = new Date("October 11, 2025 20:00:00");
+const countdownEl = document.getElementById('countdown');
+function actualizarContador(){
+  const ahora = new Date();
+  let diff = Math.floor((fechaEvento - ahora) / 1000);
+  if(diff <= 0){
+    countdownEl.textContent = "00:00:00:00";
+    clearInterval(intervalo);
+    return;
+  }
+  const dias = Math.floor(diff / 86400);
+  diff %= 86400;
+  const horas = Math.floor(diff / 3600);
+  diff %= 3600;
+  const minutos = Math.floor(diff / 60);
+  const segundos = diff % 60;
 
-    function actualizarContador(){
-      const ahora = new Date();
-      let diff = Math.floor((fechaEvento - ahora) / 1000);
-      if(diff <= 0){
-        countdownEl.textContent = "00:00:00:00";
-        clearInterval(intervalo);
-        return;
-      }
-      const dias = Math.floor(diff / 86400);
-      diff %= 86400;
-      const horas = Math.floor(diff / 3600);
-      diff %= 3600;
-      const minutos = Math.floor(diff / 60);
-      const segundos = diff % 60;
+  const diasStr = String(dias).padStart(2,'0');
+  const horasStr = String(horas).padStart(2,'0');
+  const minStr = String(minutos).padStart(2,'0');
+  const secStr = String(segundos).padStart(2,'0');
 
-      // Formato: DD:HH:MM:SS (días puede tener más de 2 dígitos si hace falta)
-      const diasStr = String(dias).padStart(2,'0');
-      const horasStr = String(horas).padStart(2,'0');
-      const minStr = String(minutos).padStart(2,'0');
-      const secStr = String(segundos).padStart(2,'0');
+  countdownEl.textContent = `${diasStr}:${horasStr}:${minStr}:${secStr}`;
+}
+actualizarContador();
+const intervalo = setInterval(actualizarContador, 1000);
 
-      countdownEl.textContent = `${diasStr}:${horasStr}:${minStr}:${secStr}`;
+/* ===== Fit images: la lógica que adapta el bloque a la imagen sin recortar ni deformar =====
+   Comportamiento:
+   - Carga la imagen naturalWidth/naturalHeight.
+   - Calcula la escala necesaria para que la imagen sea **al menos** del tamaño de la ventana
+     en ambas dimensiones: scale = Math.max(vw/nw, vh/nh).
+   - Esto garantiza que NO habrán bordes oscuros ni recortes de la imagen visible; la imagen completa
+     queda visible dentro del bloque (el bloque puede quedar más alto que la ventana).
+   - Si prefieres otra política (por ejemplo: ajustar al ancho solo), dime y lo cambio.
+*/
+function fitAllBlocks(){
+  const blocks = document.querySelectorAll('.image-block');
+  blocks.forEach(block => {
+    const img = block.querySelector('img');
+    if(!img) return;
+
+    // Si la imagen ya está cargada usamos sus dimensiones, si no, esperamos al onload
+    if(img.naturalWidth && img.naturalHeight) {
+      fitSingle(block, img);
+    } else {
+      // asegurar que la imagen se cargue y luego aplicar
+      img.addEventListener('load', () => fitSingle(block, img), { once:true });
     }
-    actualizarContador();
-    const intervalo = setInterval(actualizarContador, 1000);
+  });
+}
 
-    // ===== Fade-in simple cuando entra en viewport =====
-    const bloques = document.querySelectorAll('.image-block');
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if(entry.isIntersecting) entry.target.classList.add('visible');
-      });
-    }, {threshold:0.12});
-    bloques.forEach(b => obs.observe(b));
+function fitSingle(block, img){
+  const nw = img.naturalWidth;
+  const nh = img.naturalHeight;
+  const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+  const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 
-    // ===== Preload backgrounds para mejor calidad en pantallas grandes =====
-    bloques.forEach(b => {
-      const bg = getComputedStyle(b).backgroundImage;
-      const m = bg.match(/url\(("|')?(.*?)\1\)/);
-      if(m && m[2]) {
-        const img = new Image();
-        img.src = m[2];
-      }
+  // escala necesaria para que la imagen cubra al menos la ventana en ancho y alto
+  const scale = Math.max(vw / nw, vh / nh);
+
+  const displayW = Math.ceil(nw * scale);
+  const displayH = Math.ceil(nh * scale);
+
+  // Fijamos el tamaño visual de la imagen y del bloque
+  img.style.width = displayW + 'px';
+  img.style.height = displayH + 'px';
+
+  // El bloque debe tener la altura exacta para mostrar la imagen completa (sin recorte)
+  block.style.height = displayH + 'px';
+
+  // Centramos la imagen visualmente dentro del bloque (horiz/vert)
+  img.style.margin = '0 auto';
+}
+
+/* Reaplicar en carga y resize */
+window.addEventListener('load', () => {
+  fitAllBlocks();
+
+  // Fade-in cuando entra en viewport (tu IntersectionObserver original adaptado)
+  const bloques = document.querySelectorAll('.image-block');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) entry.target.classList.add('visible');
     });
+  }, {threshold:0.12});
+  bloques.forEach(b => obs.observe(b));
+});
 
-    // Nota: no hay textos ni botones añadidos por JS; todo está limpio.
-  </script>
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  // Debounce para evitar cálculos innecesarios
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(fitAllBlocks, 120);
+});
+</script>
 </body>
 </html>
