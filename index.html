@@ -70,6 +70,19 @@
     /* Fade-in */
     .image-block{opacity:0;transform:translateY(8px);transition:opacity 500ms ease, transform 600ms cubic-bezier(.2,.9,.2,1)}
     .image-block.visible{opacity:1;transform:none}
+
+    /*Mapa */
+      .map-link {
+    position: absolute;
+    top: 20%;    /* 🔧 Ajusta para ubicar bien la gota */
+    left: 25%;   /* 🔧 Ajusta también */
+    width: 50%;  /* 🔧 Ancho del área clickeable */
+    height: 60%; /* 🔧 Alto del área clickeable */
+    opacity: 0;  /* invisible */
+    cursor: pointer;
+    z-index: 2;  /* asegúrate que quede encima */
+  }
+
   </style>
 </head>
 <body>
@@ -100,8 +113,14 @@
       <img src="imagenes/5.png" alt="imagen 5">
     </section>
     <section class="image-block" id="img6">
-      <img src="imagenes/6.png" alt="imagen 6">
+      <img src="imagenes/6.png" alt="Lugar">
+
+      <!-- Link invisible encima de la gota -->
+      <a href="https://maps.app.goo.gl/zrkvaqKgciweU6LX9" 
+        target="_blank" 
+        class="map-link"></a>
     </section>
+
     <section class="image-block" id="img7">
       <img src="imagenes/7.png" alt="imagen 7">
     </section>
@@ -150,4 +169,3 @@ bloques.forEach(b => obs.observe(b));
 </script>
 </body>
 </html>
-
