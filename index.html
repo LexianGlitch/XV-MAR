@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Invitación - Mis XV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --text: #fff;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Montserrat,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;background:#000}
+    /* Cada bloque ocupa 100vh (pantalla completa) y la imagen siempre cubre sin deformar */
+    .image-block{
+      width:100%;
+      min-height:100vh;
+      height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background-position:center center;
+      background-repeat:no-repeat;
+      background-size:cover; /* -> llena la zona, mantiene proporción (no deforma) */
+      overflow:hidden;
+    }
+
+    /* Contador puro: sin fondo, solo números */
+    .countdown {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 6vw, 72px);
+      font-weight:700;
+      color: var(--text);
+      letter-spacing: 0.03em;
+      text-shadow: 0 6px 20px rgba(0,0,0,0.6); /* para legibilidad sobre la imagen */
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* Pequeño estilo para el separador : */
+    .countdown .sep { opacity: 0.95; margin: 0 8px; }
+
+    /* Para asegurar que el contador está siempre visible encima de la imagen (sin fondo) */
+    #countdownWrap {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    /* Opcional: transición suave al cargar */
+    .image-block{opacity:0;transform:translateY(8px);transition:opacity 500ms ease, transform 600ms cubic-bezier(.2,.9,.2,1)}
+    .image-block.visible{opacity:1;transform:none}
+  </style>
+</head>
+<body>
+
+  <!-- Bloques: sin contenido textual -->
+  <main>
+    <section class="image-block" id="img1" style="background-image:url('imagenes/1.png');"></section>
+
+    <!-- Bloque del contador: SOLO el contador encima de la imagen -->
+    <section class="image-block" id="img2" style="background-image:url('imagenes/2.png');">
+      <div id="countdownWrap">
+        <div id="countdown" class="countdown" aria-live="polite" role="timer">00:00:00:00</div>
+      </div>
+    </section>
+
+    <section class="image-block" id="img3" style="background-image:url('imagenes/3.png');"></section>
+    <section class="image-block" id="img4" style="background-image:url('imagenes/4.png');"></section>
+    <section class="image-block" id="img5" style="background-image:url('imagenes/5.png');"></section>
+    <section class="image-block" id="img6" style="background-image:url('imagenes/6.png');"></section>
+    <section class="image-block" id="img7" style="background-image:url('imagenes/7.png');"></section>
+    <section class="image-block" id="img8" style="background-image:url('imagenes/8.png');"></section>
+  </main>
+
+  <script>
+    // ===== Contador puro (DD:HH:MM:SS) =====
+    const fechaEvento = new Date("October 11, 2025 20:00:00"); // mantuve la fecha original
+    const countdownEl = document.getElementById('countdown');
+
+    function actualizarContador(){
+      const ahora = new Date();
+      let diff = Math.floor((fechaEvento - ahora) / 1000);
+      if(diff <= 0){
+        countdownEl.textContent = "00:00:00:00";
+        clearInterval(intervalo);
+        return;
+      }
+      const dias = Math.floor(diff / 86400);
+      diff %= 86400;
+      const horas = Math.floor(diff / 3600);
+      diff %= 3600;
+      const minutos = Math.floor(diff / 60);
+      const segundos = diff % 60;
+
+      // Formato: DD:HH:MM:SS (días puede tener más de 2 dígitos si hace falta)
+      const diasStr = String(dias).padStart(2,'0');
+      const horasStr = String(horas).padStart(2,'0');
+      const minStr = String(minutos).padStart(2,'0');
+      const secStr = String(segundos).padStart(2,'0');
+
+      countdownEl.textContent = `${diasStr}:${horasStr}:${minStr}:${secStr}`;
+    }
+    actualizarContador();
+    const intervalo = setInterval(actualizarContador, 1000);
+
+    // ===== Fade-in simple cuando entra en viewport =====
+    const bloques = document.querySelectorAll('.image-block');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, {threshold:0.12});
+    bloques.forEach(b => obs.observe(b));
+
+    // ===== Preload backgrounds para mejor calidad en pantallas grandes =====
+    bloques.forEach(b => {
+      const bg = getComputedStyle(b).backgroundImage;
+      const m = bg.match(/url\(("|')?(.*?)\1\)/);
+      if(m && m[2]) {
+        const img = new Image();
+        img.src = m[2];
+      }
+    });
+
+    // Nota: no hay textos ni botones añadidos por JS; todo está limpio.
+  </script>
+</body>
+</html>
