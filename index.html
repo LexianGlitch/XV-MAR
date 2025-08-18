@@ -83,6 +83,29 @@
     z-index: 2;  /* asegúrate que quede encima */
   }
 
+    .confirmacion-link {
+    position: absolute;
+    bottom: 20%;    /* 🔧 Ajusta para ubicar bien la gota */
+    left: 25%;   /* 🔧 Ajusta también */
+    width: 50%;  /* 🔧 Ancho del área clickeable */
+    height: 60%; /* 🔧 Alto del área clickeable */
+    opacity: 0;  /* invisible */
+    cursor: pointer;
+    z-index: 2;  /* asegúrate que quede encima */
+  }
+
+  .whatsapp-link {
+  position: absolute;
+  top: 20%;    /* 🔧 ajusta según la zona clickeable en tu imagen */
+  left: 20%;   /* 🔧 ajusta */
+  width: 60%;  /* 🔧 ajusta al área de la “gota” o botón */
+  height: 60%; /* 🔧 ajusta */
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+
   </style>
 </head>
 <body>
@@ -114,16 +137,19 @@
     </section>
     <section class="image-block" id="img6">
       <img src="imagenes/6.png" alt="Lugar">
-
-      <!-- Link invisible encima de la gota -->
       <a href="https://maps.app.goo.gl/zrkvaqKgciweU6LX9" 
         target="_blank" 
         class="map-link"></a>
     </section>
 
-    <section class="image-block" id="img7">
-      <img src="imagenes/7.png" alt="imagen 7">
-    </section>
+<section class="image-block" id="img7">
+  <img src="imagenes/7.png" alt="Confirmación">
+
+  <!-- Link invisible para confirmar por WhatsApp -->
+  <a href="https://wa.me/528662108621?text=Soy%20(Tu%20Nombre)%20confirmo%20mi%20asistencia."
+     target="_blank"
+     class="whatsapp-link"></a>
+</section>
 
   </main>
 
